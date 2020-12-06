@@ -404,12 +404,12 @@ class _MyInputFormState extends State<MyInputForm> {
           children: [
             MyTextField(
               controller: widget.aController,
-              labelText: "a in m/s",
+              labelText: "a in m/s²",
             ),
             SizedBox(width: 10,),
             MyTextField(
               controller: widget.deltaTController,
-              labelText: "ΔT in s",
+              labelText: "Δt in s",
             ),
             SizedBox(width: 10,),
             MyTextField(
