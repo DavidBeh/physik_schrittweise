@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         GotArgumentsPage.route: (context) => GotArgumentsPage(),
         ResultsPage.route: (context) => ResultsPage(),
       },
-      title: 'Flutter Demo',
+      title: 'Physik Schrittweise',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
