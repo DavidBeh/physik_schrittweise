@@ -1,16 +1,17 @@
 # physik_schrittweise
 
-Berechnet höhe von freiem Fall Schrittweise
 
-## Getting Started
+Berechnet Höhe von freiem Fall Schrittweise
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+##Bekannte Fehler:
+- Fehler beim Neuladen auf eine andere Seite als die Homepage (zb. /arguments)
+- Fehler beim benutzen von Kommas als Dezimaltrennzeichen
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+##Bekannte Probleme:
+- Der Graph sieht nicht optimal aus
+- Rechnungen sind ungenau (auf die 10. Nachkommastelle)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##TODO
+- Decimal anstatt double verwenden
+- Argumente abspeichern oder Fallbacks einrichten
