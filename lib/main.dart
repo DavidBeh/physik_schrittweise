@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:url_launcher/url_launcher.dart';
+import "package:decimal/decimal.dart";
+import 'berechnung.dart';
+import "widget_input_verfahren.dart";
 //import 'package:decimal/decimal.dart';
 void main() {
   runApp(MyApp());
@@ -13,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        HomePage.route: (context) => HomePage(),
+        //HomePage.route: (context) => HomePage(),
         GotArgumentsPage.route: (context) => GotArgumentsPage(),
         ResultsPage.route: (context) => ResultsPage(),
       },
@@ -21,20 +24,29 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      home: WidgetTest(),
+    );
+  }
+}
+class WidgetTest extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: WidgetFreierFallInput(),
     );
   }
 }
 
 
 class FormArguments {
-  double a;
-  double deltaT;
-  double maxT;
+  Decimal a;
+  Decimal deltaT;
+  Decimal maxT;
 
   FormArguments(String a,String deltaT,String maxT) {
-    this.a = double.parse(a);
-    this.deltaT = double.parse(deltaT);
-    this.maxT = double.parse(maxT);
+    this.a = Decimal.parse(a);
+    this.deltaT = Decimal.parse(deltaT);
+    this.maxT = Decimal.parse(maxT);
   }
 }
 
@@ -105,22 +117,22 @@ class _HomePageState extends State<HomePage> {
 calcAsync() {
 
 }
-Stream<StreamBerechnungSnapshot> StreamBerechnung(double a, double maxT, double deltaT) async* {
+Stream<StreamBerechnungSnapshot> StreamBerechnung(Decimal a, Decimal maxT, Decimal deltaT) async* {
 
 
   //List<Berechnung> listBerechnungen = new List<Berechnung>.empty(growable: true);
 
   var updateStopwatch = Stopwatch();
   var a_berechnung = Berechnung(
-    t: 0,
-    y: 0,
+    t: Decimal.zero,
+    y: Decimal.zero,
     a: a,
-    v: 0,
+    v: Decimal.zero,
     durchgang: 0,
     deltaT: deltaT,
   );
 
-  StreamBerechnungSnapshot snap = StreamBerechnungSnapshot(a_berechnung.t, false);
+  StreamBerechnungSnapshot snap = StreamBerechnungSnapshot(a_berechnung.t.toDouble(), false);
   snap.listBerechnungen.add(a_berechnung);
   yield snap;
   await Future.delayed(const Duration(milliseconds: 300), (){});
@@ -161,11 +173,11 @@ class StreamBerechnungSnapshot{
 }
 
 class Berechnung{
-  double t;
-  double y;
-  double a;
-  double v;
-  double deltaT;
+  Decimal t;
+  Decimal y;
+  Decimal a;
+  Decimal v;
+  Decimal deltaT;
   int durchgang;
   Ergebnis ergebnis;
   Berechnung.copy(Berechnung berechnung) {
@@ -177,7 +189,13 @@ class Berechnung{
     durchgang = berechnung.durchgang;
     ergebnis = Ergebnis.copy(berechnung.ergebnis);
   }
-  Berechnung({this.t = 0, this.y = 0, this.a = 9.81, this.v = 0, this.deltaT = 0.1, this.durchgang = 0}) {
+
+  Berechnung({this.t, this.y, this.a, this.v, this.deltaT, this.durchgang = 0}) {
+    t ??= Decimal.zero;
+    y ??= Decimal.zero;
+    a ??= Decimal.parse("-9.81");
+    v ??= Decimal.zero;
+    deltaT ??= Decimal.parse("0.1");
     var tneu = t + deltaT;
     var aneu = a;
     var vneu = v + aneu * deltaT;
@@ -186,10 +204,10 @@ class Berechnung{
   }
 }
 class Ergebnis{
-  double a;
-  double v;
-  double y;
-  double t;
+  Decimal a;
+  Decimal v;
+  Decimal y;
+  Decimal t;
   Ergebnis.copy(Ergebnis ergebnis) {
     a = ergebnis.a;
     v = ergebnis.v;
@@ -339,7 +357,7 @@ class _ResultsPageState extends State<ResultsPage> {
                   lineBarsData: [
                     LineChartBarData(
                       spots: args.listBerechnungen.map((e) => FlSpot(
-                        e.t, e.y
+                        e.t.toDouble(), e.y.toDouble()
                       )).toList(),
                       barWidth: 1.5,
                       dotData: FlDotData(
