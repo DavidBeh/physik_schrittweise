@@ -1,15 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as developer;
+import 'dart:developer' as dev;
 import 'package:fl_chart/fl_chart.dart';
+import 'package:quiver/collection.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import "package:decimal/decimal.dart";
 import 'berechnung.dart';
 import "widget_input_verfahren.dart";
 //import 'package:decimal/decimal.dart';
+
 void main() {
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override
@@ -24,15 +28,113 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: WidgetTest(),
+      home: MainPage(),
     );
   }
 }
+
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+
+}
+
+class _MainPageState extends State<MainPage> {
+  PanelController panelController;
+  @override
+  void initState() {
+    panelController = PanelController();
+    super.initState();
+  }
+
+  bool isOpen = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('DraggableScrollableSheet'),
+      ),
+      body: SlidingUpPanel(
+        controller: panelController,
+        body: Center(
+            child: Text("mitte")
+        ),
+        onPanelOpened: () {
+          setState(() {
+            isOpen = true;
+          });
+        },
+        onPanelClosed: () {
+          setState(() {
+            isOpen = false;
+          });
+        },
+        maxHeight: 300,
+        collapsed: Container(
+          color: Colors.blue[100],
+          child: SizedBox.expand(
+            child: FlatButton.icon(
+              icon: Icon(Icons.add),
+              label: Text("Hinzufügen"),
+              onPressed: isOpen ? null : () async {
+                await panelController.open();
+              },
+            ),
+          ),
+        ),
+        panel: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Drag"),
+            FlatButton(
+              child: Text("close"),
+              onPressed: () async {
+                if (panelController.isAttached)
+                  await panelController.close();
+              },
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 20,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text("Item $index"),
+                  );
+                },
+              ),
+            ),
+          ],
+        )
+      )
+    );
+  }
+}
+
+
 class WidgetTest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: WidgetFreierFallInput(),
+    );
+  }
+}
+class StartSeite extends StatefulWidget {
+  @override
+  _StartSeiteState createState() => _StartSeiteState();
+}
+
+class _StartSeiteState extends State<StartSeite> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Physik Schrittweise"),
+      ),
+      body: SizedBox.expand(
+        child: WidgetHinzufuegen(),
+      ),
     );
   }
 }

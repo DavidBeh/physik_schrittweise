@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-
+import "package:bloc/bloc.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
 class WidgetHinzufuegen extends StatefulWidget {
   @override
   _WidgetHinzufuegenState createState() => _WidgetHinzufuegenState();
@@ -11,15 +12,29 @@ class _WidgetHinzufuegenState extends State<WidgetHinzufuegen> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
+      expand: true,
+      initialChildSize: 0.2,
+      minChildSize: 0.05,
+      maxChildSize: 0.7,
       builder: (BuildContext context, ScrollController scrollController) {
-        return FlatButton(
-          child: Text("Freier Fall"),
-
+        return Container(
+          color: Colors.red,
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: 20,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Text("Freier Fall $index"),
+              );
+            },
+          ),
         );
       },
     );
   }
 }
+
+
 
 class WidgetInputCard extends StatefulWidget {
   Widget child;
@@ -55,6 +70,8 @@ class _WidgetInputCardState extends State<WidgetInputCard> {
     );
   }
 }
+
+
 
 
 class WidgetFreierFallInput extends StatefulWidget {
